@@ -1,0 +1,238 @@
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ofor(n) for(int o=0;o<n;o++)//循环 
+#define LIST_INT_SIZE 100
+#define LISTINCREMENT 10
+#define error -1
+#define ok 1
+#define overflow -2
+#define MAXNUM 1000
+
+typedef int ElemType;
+typedef struct{
+	ElemType *elem;
+	int length;
+	int listsize;
+}SqList;
+
+//初始化表 
+int InitList(SqList &l){
+	l.elem=(ElemType*)malloc(LIST_INT_SIZE*sizeof(ElemType));//存储分配 
+	if(!l.elem) return error;
+	l.length=0;
+	l.listsize=LIST_INT_SIZE;
+	return ok;
+}
+//创建表 
+int CreatrList(SqList &l){
+	int c,i;
+	int *newbase;
+	cout<<"请输入线性表的元素个数：";
+	cin>>l.length;
+	cout<<"请输入顺序表的元素:";
+	ofor(l.length){
+		cin>>c;
+		//如果存储空间已满，增加空间 
+		if(i>=l.listsize){
+			newbase=(ElemType*)realloc(l.elem,(l.listsize+LISTINCREMENT)*sizeof(ElemType));
+			if(!newbase) exit(overflow);
+			l.elem=newbase;
+			l.listsize+=LISTINCREMENT;
+		}
+		l.elem[i++]=c;
+	}
+	cout<<endl; 
+	cout<<"添加的顺序表元素为：";
+	ofor(l.length){
+		printf("%d ",l.elem[o]);
+	}
+	return ok;
+}
+//按照值查找
+int SelectListOne(SqList &l){
+	if(l.length==0){ 
+		cout<<"请先建立一个线性表！";
+		return error;
+	}
+	int j=0,i=0,e,flag=0,place[MAXNUM];//e存储元素，flag表明是否找到元素 ,place暂存元素位置 
+	cout<<"请输入要查找的元素值：";
+	cin>>e;
+	for(i=0;i<l.length;i++){
+		if(l.elem[i]==e){
+			place[j++]=i+1;
+			flag=1;
+		}
+	}
+	if(i>MAXNUM) exit(overflow);
+	if(flag==0){
+		cout<<"没有找到该元素";
+	}else{
+		cout<<"该元素在线性表中出现的位置为：";
+		for(i=0;place[i]!='\0';i++){
+			printf("%d",place[i]);
+		}
+	}
+	return ok;
+}
+//按位置查找
+int  SelectListTwo(SqList &l){
+	if(l.length==0){ 
+		cout<<"请先建立一个线性表！";
+		return error;
+	}
+	int place;
+	cout<<"请输入要查找的元素位置：";
+	cin>>place;
+	if(place<1||place>l.length){
+		cout<<"非法位置！";
+		return error; 
+	}
+	cout<<"该元素为："<<l.elem[place-1];
+	return ok;
+}
+//按值插入
+int InsertListOne(SqList &l){
+	if(l.length==0){ 
+		cout<<"请先建立一个线性表！";
+		return error;
+	}
+	int elem1,elem2;//在元素elem1之后插入elem2
+	cout<<"输入一个元素和想在该元素后添加的元素:";
+	cin>>elem1>>elem2;
+	ElemType *p,*q;
+	for (int i=0;i<l.length;i++){
+		if(elem1==l.elem[i]){
+			p=&l.elem[i+1];
+			for(q=&l.elem[l.length-1];q>=p;q--){
+				*(q+1)=*q;
+			}
+			*p=elem2;
+			i++;
+			l.length++;
+		}
+	}
+	cout<<"插入成功，当前线性表中元素为：";
+	ofor(l.length){
+		printf("%d ",l.elem[o]);
+	}
+	return ok;
+} 
+//按位置插入 
+int InsertListTwo(SqList &l){
+	int place,e;
+	ElemType *p,*q;
+	cout<<"输入要插入元素的位置和值:";
+	cin>>place>>e;
+	if(place<1||place>l.length+1) return error;
+	int *newbase;
+	if(l.length>=l.listsize){
+		newbase=(ElemType*)realloc(l.elem,(l.listsize+LISTINCREMENT)*sizeof(ElemType));
+		if(!newbase) exit(overflow);
+		l.elem=newbase;
+		l.listsize+=LISTINCREMENT;
+	}
+	p=& l.elem[place-1];
+	for(q=&l.elem[l.length-1];q>=p;q--){
+		*(q+1)=*q;
+	}
+	*p=e;
+	++l.length;
+	cout<<"插入成功，当前线性表中元素为：";
+	ofor(l.length){
+		printf("%d ",l.elem[o]);
+	}
+	return ok;
+}
+//按值删除
+int DleteListOne(SqList &l){
+	if(l.length==0){ 
+		cout<<"请先建立一个线性表！";
+		return error;
+	}
+	int flag=0,e,count=0;
+	cout<<"请输入要删除的值：";
+	cin>>e;
+	ElemType *p,*q;
+	ofor(l.length){
+		if(l.elem[o]==e){
+			flag=1;
+			p=&l.elem[o];
+			q=&l.elem[l.length-1];
+			for(++p;p<=q;++p){
+				*(p-1)=*p;
+			}
+			l.length--;
+			o--;
+		}
+	}
+	if(flag==0){
+		cout<<"没有找到该元素";
+		return error;
+	}else{
+		cout<<"删除成功，当前线性表中元素为：";
+		ofor(l.length){
+			printf("%d ",l.elem[o]);
+		}
+		return ok;
+	}
+}
+//按位置删除 
+int DleteListTwo(SqList &l){
+	if(l.length==0){ 
+		cout<<"请先建立一个线性表！";
+		return error;
+	}
+	cout<<"请输入要删除的位置：";
+	int place;
+	cin>>place;
+	if(place<1||place>l.length){
+		cout<<"非法位置！";
+		return error; 
+	}
+	ElemType *p,*q;
+	p=&l.elem[place-1];
+	q=&l.elem[l.length-1];
+	for(++p;p<=q;++p){
+		*(p-1)=*p;
+	}
+	l.length--;
+		cout<<"删除成功，当前线性表中元素为：";
+		ofor(l.length){
+			printf("%d ",l.elem[o]);
+		}
+	return ok;
+}
+int main(){
+	freopen("input.txt","r",stdin);
+	SqList l;
+	if(!InitList(l)){
+		cout<<"初始化顺序表失败,ε=(′ο｀*)))唉"<<endl;
+	}else{
+		cout<<"已成功初始化顺序表，请选择操作(注：请先创造一个顺序表)："<<endl;
+	}
+	cout<<"<--建立一个线性表，输入1: -->"<<endl;
+	cout<<"<-----按值查找，输入2: ----->"<<endl;
+	cout<<"<----按位置查找，输入3:----->"<<endl;
+	cout<<"<-----按值插入，输入4: ----->"<<endl;
+	cout<<"<----按位置插入，输入5: ---->"<<endl;
+	cout<<"<-----按值删除，输入6: ----->"<<endl;
+	cout<<"<----按位置删除，输入7: ---->"<<endl;
+	cout<<"<-------退出，输入8: ------->"<<endl<<endl;
+	int choice;
+	while(cin>>choice){	
+		switch(choice){
+			case 1: CreatrList(l); break;
+			case 2: SelectListOne(l); break;
+			case 3: SelectListTwo(l); break;
+			case 4: InsertListOne(l); break;
+			case 5: InsertListTwo(l); break;
+			case 6: DleteListOne(l); break;
+			case 7: DleteListTwo(l); break;
+			case 8: cout<<"Thank you for using this procedure."; break; 
+			default:cout<<"输入不合法"<<endl; exit(1);
+		}
+	}
+}
