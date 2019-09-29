@@ -1,0 +1,38 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)//循环
+#define ok 1
+#define error 0
+
+int CreatList(list<int>&l,int n)//创建 
+{
+	int e;
+	ifor(n){
+		cin>>e;
+		l.push_back(e);
+	}
+}
+int PrintList(list<int>l)//输出 
+{
+	list<int>::iterator it;
+	for(it=l.begin();it!=l.end();++it){
+		cout<<*it<<' ';
+	}
+	cout<<endl;
+}
+int Union(list<int>l1,list<int>l2)//并集 
+{
+	if(l1.empty()||l2.empty()) return error;
+	l1.sort();l2.sort();//排序 
+	l1.merge(l2);//将l2的数据合并到l1中 
+	PrintList(l1);//打印l1 
+}
+int main(){
+	list<int> l1;list<int> l2;
+	int n1,n2;
+	cin>>n1;CreatList(l1,n1);
+	cin>>n2;CreatList(l2,n2);
+	Union(l1,l2);
+} 
