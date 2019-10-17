@@ -1,0 +1,852 @@
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)//循环
+#define ofor(n) for(int o=0;o<n;o++)
+#define MAXSIZE 1000
+#define NUM 1
+#define ok 1
+#define error 0
+typedef int ElemType;
+//单链表 
+typedef struct LNode{
+	ElemType data;
+	struct LNode *next;
+}LNode,*LinkList;
+//双向链表 
+typedef struct DuLNode{
+	ElemType data;
+	struct DuLNode *prior;
+	struct DuLNode *next;
+}DuLNode,*DuLinkList;
+
+//前插法建立链表1
+int  PreCreateList(LinkList &l1,int n){
+	l1=(LinkList)malloc(sizeof(LNode));
+	l1->next = NULL;		//建立一个带头结点的链表 
+	int e;				//e暂存值 
+	LinkList p;
+	cout<<"请输入要插入的元素：";
+	ifor(n)
+	{
+		p=(LinkList)malloc(sizeof(LNode));
+		cin>>e;
+		p->data=e;
+		p->next=l1->next;
+		l1->next=p;
+	}
+	return ok;
+}
+
+//后插法建立链表2
+int CreateList(LinkList &l2,int n){
+	LinkList p1,p2;
+	l2=p1=(LinkList)malloc(sizeof(LNode));
+	int e;
+	cout<<"请输入要插入的元素：";
+	ifor(n)
+	{
+		p2=(LinkList)malloc(sizeof(LNode));
+		cin>>e;
+		p2->data=e;
+		p1->next=p2;    //表尾指向新结点 
+		p1=p2;          //新结点变为当前结点 
+	}
+	p1->next=NULL;
+	return ok;
+}
+
+//按值在链表1中查找 
+int SelectList(LinkList l1,int n){
+	int e,place=1,flag=0;
+	cout<<"请输入要查找的值:";
+	cin>>e;
+	LinkList p;
+	p=l1->next;
+	cout<<"该值所在位置为：";
+	while(n--)
+	{
+		if(e==p->data)
+		{
+			cout<<place;//遍历查找，如果值为要查找的，输出位置 
+			flag=1;
+		}
+		place++;
+		p=p->next;
+	}
+	if(!flag){
+		cout<<"没有找到该元素！";
+		return error;
+	}
+	return ok;
+}
+
+//按位置查找
+ int SelectListPlace(LinkList l2,int n)
+ {
+ 	cout<<"请输入要查找的位置:";
+ 	int place,j=NUM,flag=0;
+ 	cin>>place;
+ 	if(place<0||place>n){
+ 		cout<<"位置不合法！"<<endl;
+ 		return error;
+	 }
+ 	LinkList p;
+ 	p=l2->next;
+ 	while(n--)
+	 {
+ 		if(j==place)
+		 {
+ 			cout<<"该位置上的值为："<<p->data<<endl;
+ 			flag=1;
+		 }
+ 		p=p->next;
+ 		j++;
+	 }
+	 if(!flag){
+	 	cout<<"没有找到该位置";
+	 	return error;
+	 }
+	 return ok;
+ }
+ 
+ //按值插入
+ int InsertListValue(LinkList &l1,int &n){
+ 	cout<<"请输入值："; 
+ 	int e;
+ 	cin>>e;
+ 	LinkList p;
+ 	p=l1->next;
+ 	int temp;temp=n;
+ 	while(temp--){
+ 		if(e==p->data)
+		 {
+ 			LinkList q;
+ 			q=(LinkList)malloc(sizeof(LNode));
+ 			cout<<"请输入插入的值:";
+ 			cin>>q->data;
+ 			q->next=p->next;
+ 			p->next=q;
+ 			++n;
+		 }
+ 		p=p->next;
+	 }
+	 return ok;
+ }
+ 
+ //按位置插入
+ int InsertListPlace(LinkList &l2,int &n){
+ 	cout<<"输入要插入的位置和值:";
+ 	int place,e,j=2;
+ 	cin>>place>>e;
+ 	LinkList p;
+ 	p=l2->next;
+ 	if(place>n||place<1){
+ 		cout<<"位置不合法！"<<endl;
+ 		return error;
+	 }
+	 int temp;temp=n;
+	 if(place==1)
+	 {
+	 	LinkList q;
+ 		q=(LinkList)malloc(sizeof(LNode));
+ 		q->data=e;
+ 		q->next=l2->next;
+ 		l2->next=q;
+ 		n++;
+	 }else{
+	 	while(temp--)
+		 {
+	 		if(j==place)
+			 {		//找到当前位置时申请新结点，插入 
+	 			LinkList q;
+	 			q=(LinkList)malloc(sizeof(LNode));
+	 			q->data=e;
+	 			q->next=p->next;
+	 			p->next=q;
+	 			n++;
+	 			break;
+			 }
+	 		++j;
+	 		p=p->next;
+		 }
+		 if(!p){
+		 	cout<<"插入失败";
+		 	return error;
+		 }
+	 }
+	 return ok;
+ }
+ 
+ //前插
+ int InsertListBefore(LinkList &l2,int &n) {
+ 	LinkList p,q;
+ 	p=l2;
+ 	cout<<"请输入要插入的值:";
+ 	int e;
+ 	cin>>e;
+ 	q=(LinkList)malloc(sizeof(LNode));
+	q->data=e;
+	q->next=p->next;
+	p->next=q;
+	n++;
+	return ok;
+ }
+ 
+ //后插
+int InsertListAfter(LinkList &l2,int &n) {
+	LinkList p1,p2;
+	p1=l2->next;
+	while(p1->next!=NULL)
+	{
+		p1=p1->next;
+	}
+	p1->next=NULL;
+	cout<<"请输入要插入的值:";
+	int e;
+	cin>>e;
+	p2=(LinkList)malloc(sizeof(LNode));
+	p2->data=e;
+	p1->next=p2;
+	p2->next=NULL;
+	n++;
+	return ok;
+}
+
+//按值删除
+ int DeleteListValue(LinkList &l2,int &n){
+ 	cout<<"请输入要删除的值:";
+ 	int e;
+ 	cin>>e;
+ 	LinkList p,q;
+ 	p=l2;
+ 	int temp;temp=n;
+ 	while(temp--)
+	 {
+ 		if(p->next->data==e)
+		 {
+ 			q=p->next;			//q指向下一个元素 ，也就是要删除的元素 
+ 			p->next=q->next;	
+ 			free(q);
+ 			n--;
+		 }else{
+		 	p=p->next;
+		 } 
+	 }
+	 return ok;
+ }
+ 
+//按位置删除 
+ int DeleteListPlace(LinkList &l2,int &n){
+ 	cout<<"请输入要删除的位置：";
+ 	int place,k;
+ 	cin>>place;
+ 	LinkList pre,p;
+ 	pre=l2;
+ 	while(pre&&k<place-1)
+	 {
+ 		pre=pre->next;
+ 		k++;
+	 }
+	 if(!(pre->next)||pre->next==l2)
+	 {
+	 	cout<<"删除位置不合理！";
+	 	return error;
+	 }
+	 p=pre->next;
+	 pre->next=p->next;
+	 free(p);
+	 n--;
+	 return ok;
+	 
+ }
+
+ //输出表中的内容
+ int InputList(LinkList &l2,int n) {
+ 	LinkList p;
+ 	p=l2->next;
+ 	cout<<"当前链表中的内容为：";
+ 	while(n--)
+	 {
+ 		cout<<p->data<<' ';
+ 		p=p->next;
+	 }
+	 cout<<endl;
+ }
+ 
+ 
+//------双向链表-------
+//前插法建立
+int PreCreateDuList(DuLinkList &l,int n){
+	l=(DuLinkList)malloc(sizeof(DuLNode));
+	l->next = NULL;		//建立一个带头结点的链表 
+	l->prior=NULL;
+	int e;				//e暂存值 
+	DuLinkList p;
+	cout<<"请输入要插入的元素：";
+	ofor(n){
+		cin>>e;
+		p=(DuLinkList)malloc(sizeof(DuLNode));
+		p->data=e;
+		p->next=l->next;
+		if(l->next!=NULL) l->next->prior=p;
+		l->next=p;
+		p->prior=l;
+	}
+	return ok;
+}
+//后插法建立
+int CreateDuList(DuLinkList &l,int n) {
+	l=(DuLinkList)malloc(sizeof(DuLNode));
+	l->next=l->prior=NULL;
+	DuLinkList p,q;
+	q=l;
+	int e;
+	cout<<"请输入要插入的元素：";
+	ofor(n){
+		cin>>e;
+		p=(DuLinkList)malloc(sizeof(DuLNode));
+		p->data=e;
+		p->prior=q;
+		q->next=p;
+		q=p;
+	}
+	q->next=NULL;
+}
+//按值查找
+int  SelectDuList(DuLinkList &l,int n){
+	DuLinkList p;
+	p=l->next;
+	int flag=0,j=1,e;
+	cout<<"请输入要查找的值:";
+	cin>>e;
+	cout<<"该值所在位置为：";
+	while(n--){
+		if(e==p->data){
+			cout<<j;
+			flag=1;
+		}
+		++j;
+		p=p->next;
+	}
+	if(flag==0){
+		cout<<"没有找到该元素";
+	}
+}
+//按位置查找
+int  SelectDuListPlace(DuLinkList &l,int n){
+	cout<<"请输入要查找的位置:";
+ 	int place,j=NUM,flag=0;
+ 	cin>>place;
+ 	if(place<0||place>n){
+ 		cout<<"位置不合法！";
+ 		return error;
+	 }
+ 	DuLinkList p;
+ 	p=l->next;
+ 	while(n--)
+	 {
+ 		if(j==place)
+		 {
+ 			cout<<"该位置上的值为："<<p->data<<endl;
+ 			flag=1;
+		 }
+ 		p=p->next;
+ 		j++;
+	 }
+	 if(!flag){
+	 	cout<<"没有找到该位置";
+	 	return error;
+	 }
+	 return ok;
+}
+//按值插入
+int  InsertDuListValue(DuLinkList &l,int &n){
+	cout<<"请输入值："; 
+ 	int e,flag;
+ 	cin>>e;
+	DuLinkList p,q;
+	p=l->next;
+	int temp;temp=n;//temp暂存n的值 
+	while(temp--){
+		if(p->data==e){
+			q=(DuLinkList)malloc(sizeof(DuLNode));
+			cout<<"请输入插入的值:";
+ 			cin>>q->data;
+			q->next=p->next;
+			if(p->next!=NULL) p->next->prior=q;
+			p->next=q;
+			q->prior=p;
+			++n;
+			flag=1;
+		}
+		p=p->next;
+	}
+	if(!flag){
+		cout<<"插入失败！";
+		return error;
+	}else{
+		return ok;
+	}
+}
+//按位置插入
+int InsertDuListPlace(DuLinkList &l,int &n) {
+	cout<<"输入要插入的位置和值:";
+ 	int place,e,j=2;
+ 	cin>>place>>e;
+ 	DuLinkList p;
+ 	p=l->next;
+ 	if(place>n||place<1){
+ 		cout<<"位置不合法！"<<endl;
+ 		return error;
+	 }
+	 int temp;temp=n;
+	 if(place==1)
+	 {
+	 	DuLinkList q;
+ 		q=(DuLinkList)malloc(sizeof(DuLNode));
+ 		q->data=e;
+ 		q->next=p->next;
+		if(p->next!=NULL) p->next->prior=q;
+		p->next=q;
+		q->prior=p;
+ 		n++;
+	 }else{
+	 	while(temp--)
+		 {
+	 		if(j==place)
+			 {		//找到当前位置时申请新结点，插入 
+	 			DuLinkList q;
+	 			q=(DuLinkList)malloc(sizeof(DuLNode));
+	 			q->data=e;
+	 			q->next=p->next;
+				if(p->next!=NULL) p->next->prior=q;
+				p->next=q;
+				q->prior=p;
+	 			n++;
+	 			break;
+			 }
+	 		++j;
+	 		p=p->next;
+		 }
+		 if(!p){
+		 	cout<<"插入失败";
+		 	return error;
+		 }
+	 }
+	 return ok;
+}
+//前插
+ int InsertDuListBefore(DuLinkList &l,int &n){
+ 	DuLinkList p,q;
+ 	p=l;
+ 	cout<<"请输入要插入的值:";
+ 	int e;
+ 	cin>>e;
+ 	q=(DuLinkList)malloc(sizeof(DuLNode));
+	q->data=e;
+	q->next=p->next;
+	if(p->next!=NULL) p->next->prior=q;
+	p->next=q;
+	q->prior=p;
+	n++;
+	return ok;
+ }
+//后插
+int  InsertDuListAfter(DuLinkList &l,int &n){
+	DuLinkList p1,p2;
+	p1=l->next;
+	while(p1->next!=NULL)
+	{
+		p1=p1->next;
+	}
+	p1->next=NULL;
+	cout<<"请输入要插入的值:";
+	int e;
+	cin>>e;
+	p2=(DuLinkList)malloc(sizeof(DuLNode));
+	p2->data=e;
+	p1->next=p2;
+	p2->prior=p1;
+	p1=p2;
+	n++;
+	return ok;
+}
+//按值删除
+int DeleteDuListValue(DuLinkList &l,int &n){
+	cout<<"请输入要删除的值:";
+ 	int e;
+ 	cin>>e;
+ 	DuLinkList p,q;
+ 	p=l->next;
+ 	int temp;temp=n;
+ 	while(temp--)
+	 {
+ 		if(p->data==e)
+		 {
+ 			if(p->prior!=NULL) p->prior->next=p->next;
+ 			if(p->next!=NULL) p->next->prior=p->prior;
+ 			free(p);
+ 			n--;
+		 }else{
+		 	p=p->next;
+		 } 
+	 }
+	 return ok;
+}
+//按位置删除
+int DeleteDuListPlace (DuLinkList &l,int &n){
+	cout<<"请输入要删除的位置：";
+ 	int place,k;
+ 	cin>>place;
+ 	DuLinkList pre,p;
+ 	pre=l;
+ 	while(pre&&k<place-1)
+	 {
+ 		pre=pre->next;
+ 		k++;
+	 }
+	 if(!(pre->next)||place<0)
+	 {
+	 	cout<<"删除位置不合理！";
+	 	return error;
+	 }
+	 p=pre->next;
+	 if(p->prior!=NULL) p->prior->next=p->next;
+ 	 if(p->next!=NULL) p->next->prior=p->prior;
+	 free(p);
+	 n--;
+	 return ok;
+}
+//输出双向链表
+int InputDuList(DuLinkList &l,int n)
+{
+	DuLinkList p;
+	p=l->next;
+	cout<<"当前链表中的内容为：";
+ 	while(n--) 
+	 {
+ 		cout<<p->data<<' ';
+ 		p=p->next;
+	 }
+	 cout<<endl;
+}
+//------循环链表-------
+//循环链表的部分功能可在单链表中实现 
+//前插法建立 
+int PreCreateCList(LinkList &l,int &n){
+	l=(LinkList)malloc(sizeof(LNode));
+	l->next = NULL;		//建立一个带头结点的链表 
+	LinkList l1;
+	int e,i=0;				//e暂存值 
+	LinkList p;
+	cout<<"请输入要插入的元素：";
+	ofor(n)
+	{ 
+		p=(LinkList)malloc(sizeof(LNode));
+		cin>>e;
+		p->data=e;
+		p->next=l->next;
+		l->next=p;
+		if(i==0) l1=p;++i;   //暂存头结点 
+	}
+	l1->next=l;
+	return ok;
+}
+//后插法建立
+int CreateCList(LinkList &l,int n){
+ 	LinkList p1,p2;
+ 	int e;
+ 	cout<<"请输入要插入的元素：";
+	l=p1=(LinkList)malloc(sizeof(LNode));
+	ifor(n)
+	{
+		p2=(LinkList)malloc(sizeof(LNode));
+		cin>>e;
+		p2->data=e;
+		p1->next=p2;    //表尾指向新结点 
+		p1=p2;          //新结点变为当前结点 
+	}
+	p1->next=l;
+	return ok;
+}
+//后插 
+int InsertCListAfter(LinkList &l2,int &n) {
+	LinkList p1,p2;
+	p1=l2->next;
+	while(p1->next!=l2)
+	{
+		p1=p1->next;
+	}
+	p1->next=NULL;
+	cout<<"请输入要插入的值:";
+	int e;
+	cin>>e;
+	p2=(LinkList)malloc(sizeof(LNode));
+	p2->data=e;
+	p1->next=p2;
+	p2->next=l2;
+	n++;
+	return ok;
+}
+
+int main()
+{
+	//freopen("input.txt","r",stdin);
+	LinkList l2,head;
+	DuLinkList l;
+	int n,result;//result记录返回的结果 
+	
+	cout<<"  <-----------菜单------------>"<<endl;
+	cout<<"请选择要进行操作的链表："<<endl; 
+	cout<<"  <------单链表，输入1: ------>"<<endl;
+	cout<<"  <-----双向链表，输入2: ----->"<<endl;
+	cout<<"  <-----循环链表，输入3: ----->"<<endl;
+	int prechoice;
+	while(cin>>prechoice)
+	{
+		if(prechoice==1)//单链表 
+		{
+			cout<<" ------------单链表-------------"<<endl;
+			cout<<"  <----前插法建立，输入1: ---->"<<endl;
+				cout<<"  <----后插法建立，输入2: ---->"<<endl;
+				cout<<"  <-----按值查找，输入3: ----->"<<endl;
+				cout<<"  <----按位置查找，输入4:----->"<<endl;
+				cout<<"  <-----按值插入，输入5: ----->"<<endl;
+				cout<<"  <----按位置插入，输入6: ---->"<<endl;
+				cout<<"  <-------前插，输入7: ------->"<<endl;
+				cout<<"  <-------后插，输入8: ------->"<<endl;
+				cout<<"  <-----按值删除，输入9: ----->"<<endl;
+				cout<<"  <----按位置删除，输入10: ---->"<<endl;
+				cout<<"  <------取表长，输入11: ------>"<<endl;
+				cout<<"  <-------退出，输入12: ------->"<<endl;
+				int choice;
+				while(cin>>choice)
+				{
+					switch(choice)
+					{
+						case 1:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=PreCreateList(l2,n);InputList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 2:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=CreateList(l2,n);InputList(l2,n); 
+						break;
+						case 3:
+							result=SelectList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 4:
+							result=SelectListPlace(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 5:result=InsertListValue(l2,n);InputList(l2,n); 
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							break;
+						case 6:result=InsertListPlace(l2,n);InputList(l2,n); 
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							break;
+						case 7:result=InsertListBefore(l2,n);InputList(l2,n); 
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							break;
+						case 8:result=InsertListAfter(l2,n);InputList(l2,n); 
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							break;
+						case 9:result=DeleteListValue(l2,n);InputList(l2,n);
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							 break;
+						case 10:result=DeleteListPlace(l2,n);InputList(l2,n); 
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+							break;
+						case 11:cout<<"当前表场为："<<n<<endl; 
+						cout<<"请选择下一步操作："<<endl;
+						break;
+						case 12:exit(1);
+						default:cout<<"输入不合法"<<endl; exit(1);
+					}
+				}
+		}else if(prechoice==2)//双向链表 
+		{
+			cout<<" ------------双向链表------------"<<endl;
+			cout<<"  <----前插法建立，输入1: ---->"<<endl;
+			cout<<"  <----后插法建立，输入2: ---->"<<endl;
+			cout<<"  <-----按值查找，输入3: ----->"<<endl;
+			cout<<"  <----按位置查找，输入4:----->"<<endl;
+			cout<<"  <-----按值插入，输入5: ----->"<<endl;
+			cout<<"  <----按位置插入，输入6: ---->"<<endl;
+			cout<<"  <-------前插，输入7: ------->"<<endl;
+			cout<<"  <-------后插，输入8: ------->"<<endl;
+			cout<<"  <-----按值删除，输入9: ----->"<<endl;
+			cout<<"  <----按位置删除，输入10: ---->"<<endl;
+			cout<<"  <------取表长，输入11: ------>"<<endl;
+			cout<<"  <-------退出，输入12: ------->"<<endl;
+			int choice;
+				while(cin>>choice)
+				{
+					switch(choice)
+					{
+						case 1:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=PreCreateDuList(l,n);InputDuList(l,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						 break;
+						case 2:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=CreateDuList(l,n);InputDuList(l,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+								result=0;
+						break;
+						case 3:
+							result=SelectDuList(l,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 4:
+							result=SelectDuListPlace(l,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 5:
+							result=InsertDuListValue(l,n);InputDuList(l,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+								result=0;
+						break;
+						case 6:result=InsertDuListPlace(l,n);InputDuList(l,n);
+						if(result==1) cout<<"请选择下一步操作："<<endl;
+								result=0;
+						 break;
+						case 7:
+							result=InsertDuListBefore(l,n);InputDuList(l,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+								result=0;
+						break;
+						case 8:
+								result=InsertDuListAfter(l,n);InputDuList(l,n); 
+								if(result==1) cout<<"请选择下一步操作："<<endl;
+								result=0;
+						break;
+						case 9:
+							result=DeleteDuListValue(l,n);InputDuList(l,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						 break;
+						case 10:
+							result=DeleteDuListPlace(l,n);InputDuList(l,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 11:cout<<"当前表场为："<<n<<endl; 
+						cout<<"请选择下一步操作："<<endl;
+						break;
+						case 12:exit(1);
+						default:cout<<"输入不合法"<<endl; exit(1);
+					}
+				}
+		}else if(prechoice==3)//循环链表 
+		{
+			cout<<" ------------循环链表-------------"<<endl;
+			cout<<"  <----前插法建立，输入1: ---->"<<endl;
+			cout<<"  <----后插法建立，输入2: ---->"<<endl;
+			cout<<"  <-----按值查找，输入3: ----->"<<endl;
+			cout<<"  <----按位置查找，输入4:----->"<<endl;
+			cout<<"  <-----按值插入，输入5: ----->"<<endl;
+			cout<<"  <----按位置插入，输入6: ---->"<<endl;
+			cout<<"  <-------前插，输入7: ------->"<<endl;
+			cout<<"  <-------后插，输入8: ------->"<<endl;
+			cout<<"  <-----按值删除，输入9: ----->"<<endl;
+			cout<<"  <----按位置删除，输入10: ---->"<<endl;
+			cout<<"  <------取表长，输入11: ------>"<<endl;
+			cout<<"  <-------退出，输入12: ------->"<<endl;
+			int choice;
+				while(cin>>choice)
+				{
+					switch(choice)
+					{
+						case 1:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=PreCreateCList(l2,n);InputList(l2,n); break;
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						case 2:
+							cout<<"请输入链表的元素个数："; 
+							cin>>n;
+							result=CreateCList(l2,n);InputList(l2,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						 break;
+						case 3:
+							result=SelectList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;	
+						break;
+						case 4:
+							result=SelectListPlace(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 5:
+							result=InsertListValue(l2,n);InputList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 6:
+							result=InsertListPlace(l2,n);InputList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 7:
+							result=InsertListBefore(l2,n);InputList(l2,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						 break;
+						case 8:
+							result=InsertCListAfter(l2,n);InputList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 9:
+							result=DeleteListValue(l2,n);InputList(l2,n); 
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						break;
+						case 10:
+							result=DeleteListPlace(l2,n);InputList(l2,n);
+							if(result==1) cout<<"请选择下一步操作："<<endl;
+							result=0;
+						 break;
+						 case 11:cout<<"当前表场为："<<n<<endl; 
+						cout<<"请选择下一步操作："<<endl;
+						break;
+						case 12:exit(1);
+						default:cout<<"输入不合法"<<endl; exit(1);
+					}
+				}
+		}
+				
+	}
+}
+	
+	
+	
+	
+	
+	
