@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)//循环
+#define ofor(n) for(int o=0;o<n;o++)
+#define STACK_INIT_SIZE 100//存储空间初始分配量
+#define STACKINCREMENT 10//存储空间分配增量 
+#define ok 1
+#define error 0
+#define overflow -1
+
+typedef int SElemType; 
+typedef struct{
+	SElemType *base;
+	SElemType *top;
+	int stacksize;
+}SqStack;
+
+//构造一个空栈
+int InitStack(SqStack &s){
+	s.base=(SElemType*)malloc(STACK_INIT_SIZE*sizeof(SElemType));
+	if(!s.base) exit(overflow);
+	s.top=s.base;
+	s.stacksize=STACK_INIT_SIZE;
+	return ok;
+}
+//入栈
+int  Push(SqStack &s) {
+	if(s.top-s.base>=s.stacksize){
+		s.base=(SElemType*)malloc(STACKINCREMENT*sizeof(SElemType));
+		if(!s.base) exit(overflow);
+		s.top=s.base+s.stacksize;
+		s.stacksize+=STACKINCREMENT;
+	}
+	cout<<"请输入要入栈的元素：";
+	int e;cin>>e;
+	*s.top++=e;
+	return ok;
+}
+//出栈
+int Pop(SqStack &s) {
+	if(s.top==s.base) return error;
+	int e;
+	e=* --s.top;
+	cout<<"出栈的元素为："<<e<<endl;
+	return ok;
+}
+//返回栈顶元素
+int GetTop(SqStack &s) {
+	if(s.base==s.top) return error;
+	int e;
+	e=*(s.top-1);
+	cout<<"栈顶元素为："<<e<<endl;
+	return ok;
+}
+
+int main(){
+	SqStack s;
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <------建立一个顺序栈，输入1: ------>"<<endl;
+	cout<<"  <-----------入栈，输入2: ----------->"<<endl;
+	cout<<"  <-----------出栈，输入3: ----------->"<<endl;
+	cout<<"  <-------获取栈顶元素，输入4: ------->"<<endl;
+	cout<<"请选择要进行的操作(请先建立一个栈)："; 
+	int choice,result;
+	while(cin>>choice){
+		switch(choice){
+			case 1:result=InitStack(s);
+				if(result) cout<<"建立成功，请选择下一个操作：";
+				result=0;
+			break;
+			case 2:result=Push(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+			case 3:result=Pop(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+			case 4:result=GetTop(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+		}
+	}
+}
