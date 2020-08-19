@@ -1,0 +1,65 @@
+//分析分段函数的递归和非递归算法的时间复杂度，实现分段函数的递归和非递归算法
+//实现斐波那契数列
+
+#include<bits/stdc++.h>
+#include<stdio.h>
+ 
+using namespace std;
+
+//用递归实现斐波那契数列 
+int fun(int n){
+	if(n<=0){
+		return 0;
+	}else if(n==1||n==2)
+	{
+		return 1;
+	}else{
+		return fun(n-1)+fun(n-2);
+	}	
+}
+
+//用非递归实现斐波那契数列
+int fun2(int n){
+	int temp1,temp2,temp;
+		temp1=temp2=1;
+		if(n==1||n==2){
+			cout<<"斐波那契数列中第"<<n<<"项为："<<"1"<<endl;
+		}else{
+			for(int i=0;i<n-2;i++)
+			{
+			temp=temp1+temp2;
+			temp1=temp2;
+			temp2=temp;
+			}
+			cout<<"斐波那契数列中第"<<n<<"项为："<<temp<<endl;
+		}
+		
+}
+
+int main()
+{
+	cout<<"  <-------------------菜单-------------------->"<<endl;
+	cout<<"  <------用递归实现斐波那契数列，输入1: ------>"<<endl;
+	cout<<"  <-----用非递归实现斐波那契数列，输入2:------>"<<endl;
+	int choice;
+	cout<<"请选择操作：";
+	while(cin>>choice){
+		int n=0;
+		cout<<"请输入位数：";cin>>n;
+		switch(choice){
+			case 1:
+				int res;
+				res=fun(n);
+				cout<<"斐波那契数列中第"<<n<<"项为："<<res<<endl;
+				cout<<"用递归实现斐波那契数列，存在多个元素重复计算，时间复杂度约为1.5^n；"<<endl;
+			break;
+			case 2:
+				fun2(n);
+				cout<<"用非递归实现斐波那契数列，时间复杂度为O(n);"<<endl; 
+			break;
+		}
+	}
+	
+	
+	return 0;
+}
