@@ -1,0 +1,98 @@
+//实现链式栈的基本操作，包括建立、入栈、出栈、取栈顶元素； 
+
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)//循环
+#define ofor(n) for(int o=0;o<n;o++)
+#define ok 1
+#define error 0
+#define overflow -1
+
+typedef int SElemType; 
+typedef struct Node{
+	SElemType data;
+	struct Node *next;
+}Node;
+typedef struct _LinkStack{
+	Node *top;
+}*LinkStack;
+
+//构造一个空栈
+int InitStack(LinkStack &s){
+	s=(LinkStack)malloc(sizeof(SElemType));
+	if(s==NULL) exit(overflow); 
+	s->top=NULL;
+	return ok;
+}
+//入栈
+int  Push(LinkStack &s) {
+	if(s==NULL){
+		return error;
+	}
+	Node *l=(Node*)malloc(sizeof(SElemType));
+	cout<<"请输入要入栈的元素：";
+	int e;cin>>e;
+	l->data=e;
+	l->next=s->top;
+	s->top=l;
+	return ok;
+}
+//出栈
+int Pop(LinkStack &s) {
+	if(s==NULL) return error;
+	Node *l;
+	l=s->top;
+	int e;
+	e=l->data;
+	s->top=l->next;
+	free(l);
+	cout<<"出栈的元素为："<<e<<endl;
+	return ok;
+}
+//返回栈顶元素
+int GetTop(LinkStack &s) {
+	if(s==NULL) return error;
+	Node *l;
+	l=s->top;
+	int e;
+	e=l->data;
+	cout<<"栈顶元素为："<<e<<endl;
+	return ok;
+}
+
+int main(){
+	LinkStack s;
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <------建立一个链式栈，输入1: ------>"<<endl;
+	cout<<"  <-----------入栈，输入2: ----------->"<<endl;
+	cout<<"  <-----------出栈，输入3: ----------->"<<endl;
+	cout<<"  <-------获取栈顶元素，输入4: ------->"<<endl;
+	cout<<"请选择要进行的操作(请先建立一个栈)："; 
+	int choice,result;
+	while(cin>>choice){
+		switch(choice){
+			case 1:result=InitStack(s);
+				if(result) cout<<"建立成功，请选择下一个操作：";
+				result=0;
+			break;
+			case 2:result=Push(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+			case 3:result=Pop(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+			case 4:result=GetTop(s); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+		}
+	}
+}
