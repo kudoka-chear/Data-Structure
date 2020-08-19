@@ -1,0 +1,107 @@
+//实现顺序队列的基本操作，包括建立、入队、出队、取对头元素；
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ok 1
+#define error 0
+#define overflow -1
+#define LIST_INT_SIZE 10
+#define LISTINCREMENT 10
+
+typedef int ElemType;
+typedef struct{
+	ElemType *elem;
+	int front;
+	int rear;
+	int length;
+	int listsize;
+}Queue;
+//初始化队列
+int IntQueue(Queue &q){
+	q.elem=(ElemType*)malloc(LIST_INT_SIZE*sizeof(Queue));
+	if(!q.elem) return error;
+	q.length=0;
+	q.front=0;
+	q.rear=0;
+	q.listsize=LIST_INT_SIZE;
+	return ok;
+} 
+//判断是否为空
+int IsEmpty(Queue &q) {
+	if(q.rear==q.front){
+		return ok;
+	}
+	return error;
+}
+//入队 
+ int CreatQueue(Queue &q,ElemType &e){
+	 if((q.rear+1)%LIST_INT_SIZE==q.rear){
+	 	return error;
+	 }
+	 q.elem[q.rear]=e;
+	 q.rear=(q.rear+1)%LIST_INT_SIZE;
+	 return ok;
+ }
+//获取队列顶元素 
+int GetTop(Queue &q,ElemType &e){
+	if(IsEmpty(q)){
+		cout<<"队列为空！"<<endl;
+		return error;
+	}
+	cout<<"队列顶的元素为："<<q.elem[q.front];
+	return ok;
+} 
+//出队 
+int OutQueue(Queue &q,ElemType &e){
+	if(IsEmpty(q)){
+		cout<<"队列为空！"<<endl;
+		return error;
+	}
+	e=q.elem[q.front];
+	q.front=(q.front+1)%LIST_INT_SIZE;
+	cout<<"出队的元素为:"<<e<<endl;
+	return ok;
+}
+//求队列长度 
+int QueueLength(Queue &q){
+	return q.rear-q.front;
+}
+int main(){
+	Queue q;
+	if(!IntQueue(q)){
+		cout<<"初始化顺序队列失败,ε=(′ο｀*)))唉"<<endl;
+	}else{
+		cout<<"已成功初始化顺序队列，请选择操作(注：请先创造一个顺序队列)："<<endl;
+	}
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <-----------入队，输入1: ----------->"<<endl;
+	cout<<"  <-----------出队，输入2: ----------->"<<endl;
+	cout<<"  <--------取队列元素，输入3: -------->"<<endl;
+	cout<<"  <--------取队列长度，输入4: -------->"<<endl;  
+	int choice,result;int e;
+	while(cin>>choice){
+		switch(choice){
+			case 1:
+				cout<<"请输入元素：";
+				cin>>e;
+				CreatQueue(q,e);
+				break;
+			case 2:
+				OutQueue(q,e);
+				
+				break;
+			case 3:
+				GetTop(q,e);
+				
+				break;
+			case 4:
+				int len;
+				len=QueueLength(q);
+				cout<<"队列长度为:"<<len;
+				break; 
+			default:cout<<"输入不合法"<<endl; exit(1);
+		}
+	}
+} 
