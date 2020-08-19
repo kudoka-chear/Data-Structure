@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+int getNextval(string s,int *nextval){//求 NEXTVAL值
+	int i=0,j=-1;nextval[0]=-1; 
+	while(i<s.size()-1){
+		if(j==-1||s[i]==s[j]){
+			++i;
+			++j;
+			if(s[i]!=s[j]) nextval[i]=j;// 与next值不一样的地方，（如果相是s[i]s[j]同，next值也相同 ） 
+			else nextval[i]=nextval[j];
+		}else{
+			j=nextval[j];
+		}
+	}
+}
+int kmp(string s,string t,int pos=1){
+	int i=pos=1;
+	int j=1;
+	int nextval[20000];
+	getNextval(s,nextval);
+	while(i<s.size()&&j<t.size()){//i is s's ruler of position,j is t's;
+		if(j==0||s[i]==t[j]){//继续往后比较， 
+			i++;
+			j++;
+		}else{
+			j=nextval[j];//向右移动 
+		}
+	}
+	if(j>=t.size()){//排除模式串比目标串短的可能性 
+		return i-t.size()+1;//
+	}else{
+		return 0;
+	}
+}
+int main(){
+	int n=3;//测试3组数据 
+	while(n--){
+		string s,t;//模式串和目标串 
+		cin>>s>>t;
+		int pos;//pos=position 
+		pos=kmp(s,t,pos);
+		cout<<pos<<endl;
+	}
+}
