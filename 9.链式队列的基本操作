@@ -1,0 +1,118 @@
+#include<stdio.h>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define ok 1
+#define error 0
+#define overflow -1
+typedef int QElemType;
+
+typedef struct QNode{
+	QElemType data;
+	struct QNode *next;
+}QNode,*QueuePtr;
+
+typedef struct{
+	QueuePtr front;
+	QueuePtr rear;
+}LinkQueue;
+//构造一个空队列
+int InitQueue(LinkQueue &q){
+	q.front=q.rear=(QueuePtr)malloc(sizeof(QNode));
+	if(!q.front) exit(overflow);
+	q.front->next=NULL;
+	return ok;
+} 
+//销毁一个队列
+int DestroyQueue(LinkQueue &q){
+	while(q.front){
+		q.rear=q.front->next;
+		free(q.front);
+		q.front=q.rear;
+	}
+	return ok;
+} 
+//向队列中插入元素
+int EnQueue(LinkQueue &q,QElemType e){
+	if(!q.front){
+		cout<<"请先建立一个队列！";
+		return error;
+	} 
+	QueuePtr p;
+	p=(QueuePtr)malloc(sizeof(QNode));
+	if(!p) exit(overflow);
+	p->data=e;p->next=NULL;
+	q.rear->next=p;
+	q.rear=p;
+	return ok;
+	
+} 
+//取队列元素
+int GetTop(LinkQueue &q,QElemType &e){
+	if(q.front==q.rear) return error;
+	QueuePtr p;
+	p=q.front->next;
+	e=p->data;
+	return e;
+} 
+//删除队列中的元素
+int DeleteQueue(LinkQueue &q,QElemType &e){
+	if(q.front==q.rear) return error;
+	QueuePtr p;
+	p=q.front->next;
+	e=p->data;
+	q.front->next=p->next;
+	if(q.rear==p) q.rear=q.front;
+	free(p);
+	return ok;
+} 
+int main(){
+	LinkQueue q;
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <-----建立一个顺序队列，输入1: ----->"<<endl;
+	cout<<"  <-----------入队，输入2: ----------->"<<endl;
+	cout<<"  <-----------出队，输入3: ----------->"<<endl;
+	cout<<"  <--------取栈顶元素，输入4: -------->"<<endl;
+	cout<<"  <---------销毁队列，输入5：--------->"<<endl;
+	cout<<"请选择要进行的操作(请先建立一个队列)："; 
+	int choice,result;
+	while(cin>>choice){
+		switch(choice){
+			case 1:result=InitQueue(q);
+				if(result) cout<<"建立成功，请选择下一个操作：";
+				result=0;
+			break;
+			case 2:
+				int n;cout<<"请输入元素个数：";cin>>n;
+				cout<<"请输入元素：";
+				while(n--){
+					int e;cin>>e;
+					result=EnQueue(q,e);
+					if(!result) cout<<"错误!"<<endl; 
+				}
+				cout<<"操作成功，请选择下一个操作：";
+				result=0;
+			break;
+			case 3:
+				int e;
+				result=DeleteQueue(q,e); 
+				cout<<"删除的元素为："<<e<<endl;
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"错误!"<<endl; 
+				result=0;
+			break;
+			case 4:
+				int data;
+				data=GetTop(q,data);
+				cout<<"队列顶的元素为："<<data<<endl;
+				cout<<"操作成功，请选择下一个操作：";
+			break;
+			case 5:result=DestroyQueue(q); 
+				if(result) cout<<"操作成功，请选择下一个操作：";
+				else cout<<"当前栈内没有元素!"<<endl; 
+				result=0;
+			break;
+		}
+	}
+} 
