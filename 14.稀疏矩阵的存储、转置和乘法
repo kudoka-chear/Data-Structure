@@ -1,0 +1,189 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+#define MAXSIZE 12500
+#define MAXRC 200
+typedef int ElemType;
+typedef struct{
+	int i,j;
+	ElemType e;
+}Triple;
+typedef struct{
+	Triple data[MAXSIZE+1];
+	int mu,nu,tu;//行数，列数，非零元个数 
+}TSMatrix;
+//三元表法
+typedef struct{
+		Triple data[MAXSIZE+1];//三元组表 
+		int rpos[MAXSIZE+1];//各行第一个非零元位置 
+		int mu,nu,tu;
+}RLSMatrix; 
+//输入稀疏矩阵
+int InputTriple(TSMatrix &m){
+	int r,c;
+	cin>>r>>c;
+	m.mu=r;m.nu=c;m.tu=0;
+	int elem;
+	int k=0;
+	for(int col=0;col<r;col++){
+		for(int p=0;p<c;p++){
+			cin>>elem;
+			if(elem!=0){
+				m.data[k].i=col;
+				m.data[k].j=p;
+				m.data[k].e=elem;
+				k++;
+			}
+		}
+	}
+	m.tu=k;
+}
+//转置
+int TransposeSMatrix(TSMatrix &m,TSMatrix &t){
+	t.mu=m.nu;t.nu=m.mu;t.tu=m.tu;
+	int q;
+	if(t.tu){
+		q=0;
+		for(int col=0;col<m.nu;++col){
+			for(int p=0;p<m.tu;++p){
+				if(m.data[p].j==col){
+					t.data[q].i=m.data[p].j;
+					t.data[q].j=m.data[p].i;
+					t.data[q].e=m.data[p].e;
+					++q;
+				}
+			}
+		}
+	}
+} 
+int InputSMaTriple(RLSMatrix &m){
+	int r,c;
+	cin>>r>>c;
+	m.mu=r;m.nu=c;m.tu=0;
+	int elem;
+	int k=1;
+	for(int col=1;col<=r;col++){
+		m.rpos[col]=m.tu+1;//different
+		for(int p=1;p<=c;p++){
+			cin>>elem;
+			if(elem!=0){
+				m.data[k].i=col;
+				m.data[k].j=p;
+				m.data[k].e=elem;
+				k++;
+				m.tu++;
+			}
+		}
+	}
+}
+//稀疏矩阵相乘
+int MultSMatrix(RLSMatrix M,RLSMatrix N,RLSMatrix *Q){//q用来存储相乘的结果 
+	if(M.nu != N.mu)//矩阵M的列数与矩阵N的行数不等，则不能做矩阵乘运算
+        return 0;
+    Q->mu = M.mu;
+    Q->nu = N.nu;
+    Q->tu = 0;
+    if(M.tu * N.tu == 0)//其中任意矩阵的元素个数为零，则不能做乘运算
+        return 0;
+    else
+    {
+        int arow;
+        int ccol;
+        for(arow=1; arow<=M.mu; arow++)//处理矩阵M的每一行
+        {
+            int ctemp[MAXRC+1] ={};//各行的累加器清零 
+            Q->rpos[arow] = Q->tu + 1;
+            int tp;
+            if(arow < M.mu)
+                tp = M.rpos[arow+1];//获取矩阵M的下一行第一个非零元素在data数组中位置
+            else
+                tp = M.tu+1;//若当前行是最后一行，则取最后一个元素+1
+            int p;
+            int brow;
+            for(p=M.rpos[arow]; p<tp; p++)//对当前矩阵M中的每一个非零元素，在矩阵N中找到对应可乘元素
+            {
+                brow = M.data[p].j;
+                int t;
+                if(brow < N.mu)
+                    t = N.rpos[brow+1];
+                else
+                    t = N.tu+1;
+                int q;
+                int ccol;
+                for(q=N.rpos[brow]; q<t; q++)
+                {
+                    ccol = N.data[q].j;
+                    ctemp[ccol] += M.data[p].e * N.data[q].e;
+                }
+            }
+            for(ccol=1; ccol<=Q->nu; ccol++)
+            {
+                if(ctemp[ccol])
+                {
+                    if(++Q->tu > MAXSIZE)
+                        return 0;
+                    Q->data[Q->tu].e = ctemp[ccol];
+                    Q->data[Q->tu].i = arow;
+                    Q->data[Q->tu].j = ccol;
+                }
+            }
+        }
+     return 1;
+    }
+} 
+//输出稀疏矩阵(乘法)
+int OutputRLSTriple(RLSMatrix t){
+	int k=1;
+	for(int col=1;col<=t.mu;col++){
+		for(int p=1;p<=t.nu;p++){
+			if(col==(t.data[k].i)&&p==(t.data[k].j)){
+				cout<<t.data[k].e<<' ';
+				k++;
+			}else{
+				cout<<0<<' ';
+			}
+		}
+		cout<<endl;
+	}
+}
+//输出稀疏矩阵
+int OutputTriple(TSMatrix &t){
+	int k=0;
+	for(int col=0;col<t.mu;col++){
+		for(int p=0;p<t.nu;p++){
+			if(col==(t.data[k].i)&&p==(t.data[k].j)){
+				cout<<t.data[k].e<<' ';
+				k++;
+			}else{
+				cout<<0<<' ';
+			}
+		}
+		cout<<endl;
+	}
+}
+int main(){
+	//freopen("input.txt","r",stdin);
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <------稀疏矩阵的存储，输入1: ------>"<<endl;
+	cout<<"  <------稀疏矩阵的转置，输入2: ------>"<<endl;
+	cout<<"  <------稀疏矩阵的乘法，输入3: ------>"<<endl;
+	int choice;
+	while(cin>>choice){
+		TSMatrix m,t;
+		switch(choice){
+			case 1: InputTriple(m);
+					OutputTriple(m) ;
+				break;
+			case 2:TransposeSMatrix(m,t);
+				break ;
+			case 3:
+				RLSMatrix m,n,q;
+				InputSMaTriple(m);
+				InputSMaTriple(n);
+				MultSMatrix(m,n,&q);
+				OutputRLSTriple(q);
+				break;
+			default:cout<<"输入不合法"<<endl; exit(1);
+		}
+	} 
+}
