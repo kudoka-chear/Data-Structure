@@ -1,0 +1,130 @@
+//实现对称矩阵、上三角矩阵、下三角矩阵、三对角矩阵等特殊矩阵的存储；
+#include<bits/stdc++.h>
+
+using namespace std;
+
+#define SIZE 100
+#define ten 10
+//对称矩阵
+int SymmetricArry(){
+	cout<<"请输入一个对称矩阵的行数，列数，和值：";
+	int array[SIZE],old[ten][ten]; //array 用一维的方式来存储二维 
+	int m,n;
+	cin>>m>>n;
+	int k=0,count=0;
+	for(int i=1;i<=m;i++){
+		for(int j=1;j<=n;j++){
+			cin>>old[i][j];//old用来存储之前的数组，可以替换 
+			if(i>=j){//书上的计算k值的方法，根据每次的i，j，算出所对应的k值 
+				k=i*(i-1);//在这里输出的下三角 
+				k=k/2;
+				k=k+j-1;
+				array[k]=old[i][j];
+				count++;
+			}	
+			
+		}
+	} 
+	cout<<"存储空间为:";
+	for(int i=0;i<count;i++){
+		cout<<array[i]<<' ';
+	}
+	cout<<endl;
+} 
+ 
+//上三角矩阵 
+int UtrianglecArry(){
+	cout<<"请输入一个上三角矩阵的行数，列数，和值：";
+	int array[SIZE],old[ten][ten]; 
+	int m,n;
+	cin>>m>>n;
+	int k=0,count=0;
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cin>>old[i][j];
+			if(i<=j){//与对称矩阵所不同的，也就是老师上课讲的计算方法 
+				k=i*(n+n-i+1);
+				k=k/2;
+				k=k+j-i;
+				array[k]=old[i][j];
+				count++;
+			} 	
+		}
+	} 
+	cout<<"存储空间为:";
+	for(int i=0;i<count;i++){
+		cout<<array[i]<<' ';
+	}
+	cout<<endl;
+}
+//下三角矩阵
+int  NtrianglecArry(){
+	cout<<"请输入一个下三角矩阵的行数，列数，和值：";
+	int array[SIZE],old[ten][ten]; 
+	int m,n;
+	cin>>m>>n;
+	int k=0,count=0;
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cin>>old[i][j];
+			if(i>=j){
+				k=i*(i+1);
+				k=k/2;
+				k=k+j;
+				array[k]=old[i][j];
+				count++;
+			} 	
+		}
+	} 
+	cout<<"存储空间为:";
+	for(int i=0;i<count;i++){
+		cout<<array[i]<<' ';
+	}
+	cout<<endl;
+}
+//三对角矩阵
+int ThreeDiagonal(){
+	cout<<"请输入一个三对角矩阵的行数，列数，和值：";
+	int array[SIZE],old[ten][ten]; 
+	int m,n;
+	cin>>m>>n;
+	int k=0,count=0;
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			cin>>old[i][j];
+			if(old[i][j]!=0){
+				k=i*2+j;//完整表达式：i*3-1+j-i+1
+				array[k]=old[i][j]; 
+			}	
+		}
+	} 
+	cout<<"存储空间为:";
+	for(int i=0;i<k;i++){
+		cout<<array[i]<<' ';
+	}
+	cout<<endl;
+}
+
+int main(){
+	freopen("input.txt","r",stdin);
+	cout<<"  <---------------菜单---------------->"<<endl;
+	cout<<"  <------对称矩阵的存储，输入1: ------>"<<endl;
+	cout<<"  <-----上三角矩阵的存储，输入2: ----->"<<endl;
+	cout<<"  <-----下三角矩阵的存储，输入3: ----->"<<endl;
+	cout<<"  <-----三对角矩阵的存储，输入4: ----->"<<endl;
+	int choice;
+	while(cin>>choice){
+		switch(choice){
+			case 1: SymmetricArry();
+				break;
+			case 2:UtrianglecArry();
+				break ;
+			case 3:
+				NtrianglecArry();
+				break;
+			case 4:ThreeDiagonal();
+				break;
+			default:cout<<"输入不合法"<<endl; exit(1);
+		}
+	} 
+} 
