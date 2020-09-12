@@ -1,0 +1,96 @@
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+#define ok 1
+
+typedef char TElemType;
+typedef char Status;
+string ch;
+int len;
+int p=0;
+typedef struct BiTNode{
+	TElemType data;
+	struct BiTNode *lchild,*rchild;
+}BiTNode,*BiTree;
+//初始化
+int Init(BiTree *t) {
+	*t=(BiTree)malloc(sizeof(BiTNode));
+	(*t)->lchild=NULL;
+	(*t)->rchild=NULL;
+}
+
+//建立一个二叉树
+int CreatBitree(BiTree *t,int &p){
+	if(p>=len) return 0;
+	if(ch[p]=='#'){
+		*t=NULL;
+		p++;
+	}else{
+		*t=(BiTree)malloc(sizeof(BiTNode));
+		(*t)->data=ch[p];
+		p++;
+		CreatBitree(&(*t)->lchild,p);
+		CreatBitree(&(*t)->rchild,p);
+	}
+} 
+//先序遍历
+int PreOrderTraverse(BiTree t){
+	if(t){
+		cout<<t->data;
+		PreOrderTraverse(t->lchild);
+		PreOrderTraverse(t->rchild);
+	}
+} 
+//中序遍历
+int InOrderTraverse1(BiTree t){
+	if(t){
+		InOrderTraverse1(t->lchild);
+		cout<<t->data;
+		InOrderTraverse1(t->rchild);
+	}
+} 
+//后序遍历 
+int InOrderTraverse2(BiTree t){
+	if(t){
+		InOrderTraverse2(t->lchild);
+		InOrderTraverse2(t->rchild);
+		cout<<t->data;
+	}
+}
+//层序遍历
+int LevelVisit(BiTree t){
+	queue<BiTree>s;
+	if(t==NULL){
+		return 0;
+	}else{
+		s.push(t);
+	}
+	while(!s.empty()){
+		BiTree temp;
+		temp=s.front();
+		s.pop();
+		cout<<temp->data;
+		if(temp->lchild!=NULL) s.push(temp->lchild);
+		if(temp->rchild!=NULL) s.push(temp->rchild);
+	}
+}
+int main(){
+	while(cin>>ch){
+		p=0;
+		len=ch.size();
+		BiTree t;
+		CreatBitree(&t,p);
+		cout<<"前序遍历的结果为：";
+		PreOrderTraverse(t);
+		cout<<endl;
+		cout<<"中序遍历的结果为：";
+		InOrderTraverse1(t);
+		cout<<endl;
+		cout<<"后序遍历的结果为：";
+		InOrderTraverse2(t);
+		cout<<endl;
+		cout<<"层序遍历的结果为：";
+		LevelVisit(t);
+		cout<<endl;
+	}
+}
