@@ -1,0 +1,114 @@
+//实现二叉树建立算法，并请至少通过二叉树遍历（前序+左右孩子为空标志、中序+优先级结合性或后序+优先级结合性）创建的方法实现
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+#define ok 1
+
+typedef char TElemType;
+typedef char Status;
+string ch;
+int len;
+int p=0;
+string s1,s2;
+typedef struct BiTNode{
+	TElemType data;
+	struct BiTNode *lchild,*rchild;
+}BiTNode,*BiTree;
+//建立一个二叉树
+int CreatBitree(BiTree *t){
+	TElemType ch;
+	scanf("%c",&ch);
+	if(ch==' '){
+		*t=NULL;
+	}else{
+		*t=(BiTree)malloc(sizeof(BiTNode));
+		if(!*t) exit(-1);
+		(*t)->data=ch;
+		CreatBitree(&(*t)->lchild);
+		CreatBitree(&(*t)->rchild);
+	}
+} 
+//前序遍历和中序遍历求一单独二叉树 
+BiTree PreMid(int prel,int prer,int inl,int inr){
+	if(prel>prer) return NULL;
+	BiTree t=new BiTNode;
+	t->data=s1[prel];
+	int k;
+	for(k=inl;k<=inr;k++){
+		if(s2[k]==s1[prel]) break;
+	}
+	int num=k-inl;
+	t->lchild=PreMid(prel+1,prel+num,inl,k-1);
+	t->rchild=PreMid(prel+1+num,prer,1+k,inr);
+	return t;
+} 
+//中序和后序求-单独二叉树
+
+BiTree MidAfter(int prel,int prer,int inl,int inr){
+	if(prel>prer) return NULL;
+	BiTree t=new BiTNode;
+	t->data=s2[prer];
+	int k;
+	for(k=inl;k<=inr;k++){
+		if(s1[k]==s2[prer])
+		break;
+	}
+	int numLeft=k-inl;
+	t->lchild=MidAfter(prel,prel+numLeft-1,inl,k-1);
+	t->rchild=MidAfter(prel+numLeft,prer-1,k+1,inr);
+	return t;
+}
+//层序遍历
+int LevelVisit(BiTree t){
+	queue<BiTree>s;
+	if(t==NULL){
+		return 0;
+	}else{
+		s.push(t);
+	}
+	while(!s.empty()){
+		BiTree temp;
+		temp=s.front();
+		s.pop();
+		cout<<temp->data;
+		if(temp->lchild!=NULL) s.push(temp->lchild);
+		if(temp->rchild!=NULL) s.push(temp->rchild);
+	}
+}
+int main(){
+	cout<<"前序+左右孩子为空标志建立二叉树，输入1："<<endl;
+	cout<<"中序+优先级结合性建立二叉树，输入2："<<endl;
+	cout<<"后序+优先级结合性建立二叉树，输入3："<<endl;
+	int choice;
+	while(cin>>choice){
+		if(choice==1){
+			BiTree t;
+			CreatBitree(&t);
+			cout<<"层序遍历为：";
+			LevelVisit(t);
+		}else if(choice==2){
+			cout<<"请输入前序和中序:";
+			cin>>s1>>s2;
+			int prel=0,prer,inl=0,inr;
+			prer=s1.size()-1;
+			inr=s2.size()-1;
+			BiTree t;
+			t=PreMid(prel,prer,inl,inr);
+			cout<<"层序遍历为：";
+			LevelVisit(t);
+			cout<<endl;
+		}else if(choice==3){
+			cout<<"请输入中序和后序：";
+			cin>>s1>>s2;
+			int prel=0,prer,inl=0,inr;
+			prer=s1.size()-1;
+			inr=s2.size()-1;
+			BiTree t;
+			t=MidAfter(prel,prer,inl,inr);
+			cout<<"层序遍历为：";
+			LevelVisit(t);
+			cout<<endl;
+		}
+	}
+	return 0;
+}
