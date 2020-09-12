@@ -1,0 +1,108 @@
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+
+#define error 0;
+#define ok 1; 
+typedef char TElemType;
+
+typedef struct CSNode{
+	TElemType data;
+	struct CSNode *firstchild;
+	struct CSNode *nextchild;
+}CSNode,*CSTree;
+
+int CreatTree(CSTree &t){
+	queue<CSTree>q;
+	string s;
+	cout<<"请输入树的根节点：";
+	cin>>s[0];
+	if(s[0]!='#'){
+		t=(CSTree)malloc(sizeof(CSNode));
+		if(!t) return error;
+		t->data=s[0];
+		t->nextchild=NULL;
+		q.push(t);
+		while(!q.empty()){
+			CSTree e;
+			e=q.front();
+			q.pop();
+			cout<<"请输入节点"<<e->data<<"的孩子:";
+			cin>>s;
+			if(s[0]!='#'){
+				CSTree p;
+				p=(CSTree)malloc(sizeof(CSNode));
+				if(!p) return error;
+				p->data=s[0];
+				e->firstchild=p;
+				q.push(p);
+				CSTree newchild;
+				newchild=p;
+				for(int i=1;i<s.size()-1;i++){
+					p=(CSTree)malloc(sizeof(CSNode));
+					if(!p) return error;
+					p->data=s[i];
+					newchild->nextchild=p;
+					q.push(p);
+					newchild=p;
+				}
+				p->nextchild=NULL;
+			}else{
+				e->firstchild=NULL;
+			}
+		}
+	}else{
+		t=NULL;
+	}
+	return ok;
+}
+//层序遍历
+int Level(CSTree t){
+	queue<CSTree>q;
+	if(t){
+		cout<<t->data<<' ';
+		q.push(t);
+		while(!q.empty()){
+			CSTree temp,p;
+			temp=q.front();
+			q.pop();
+			p=temp->firstchild;
+			while(p){
+				cout<<p->data<<' ';
+				q.push(p);
+				p=p->nextchild;
+			}
+		}
+		cout<<endl;
+		return ok;
+	}
+	return error;
+} 
+//先根遍历（借用二叉树的先序遍历）
+int Before(CSTree t){
+	if(t){
+		cout<<t->data<<' ';
+		Before(t->firstchild);
+		Before(t->nextchild);
+	}
+}
+//后根遍历(中序遍历) 
+int After(CSTree t){
+	if(t){
+		Before(t->firstchild);
+		cout<<t->data<<' ';
+		Before(t->nextchild);
+	}
+}
+int main(){
+	CSTree t;
+	CreatTree(t);
+	cout<<"按层序遍历该树";
+	Level(t);
+	cout<<"先根遍历：";
+	Before(t);
+	cout<<endl;
+	cout<<"后根遍历：";
+	After(t);
+	cout<<endl;
+}
