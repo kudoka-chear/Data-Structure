@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<bits/stdc++.h>
+  
+using namespace std;
+#define ifor(n) for(int i=0;i<n;i++)//循环
+ 
+#define jfor(m) ;for(int j=0;j<m;j++)
+ 
+int GE[55][55];
+int dgree[55];
+vector<int>g[55];
+queue<int>node;
+ 
+int INPUT(int n){
+    ifor(n){
+        jfor(n)
+        cin>>GE[i][j];
+    }
+    ifor(n){
+        int count=0;
+        jfor(n){
+            if(GE[i][j]==1){
+                g[i].push_back(j);
+            }
+            if(GE[j][i]==1){
+                count++;
+            }
+        }
+        dgree[i]=count;
+    }
+}
+ 
+int judge(int n){
+    stack<int>s;
+    int num=0;
+    ifor(n){
+        if(dgree[i]==0){
+            s.push(i);
+            dgree[i]=-1;//无前驱 
+        }
+    }
+    while(!s.empty()){
+        int u=s.top();
+        s.pop();
+        node.push(u);
+        ifor(g[u].size()){
+            int v=g[u][i];
+            dgree[v]--;
+            if(dgree[v]==0){
+                s.push(v);
+                dgree[v]=-1;
+            }
+        }
+        g[u].clear();
+        num++;
+    }
+    if(num==n) return true;
+    else return false;
+}
+ 
+int main(){
+    int n;
+    cin>>n;
+    INPUT(n);
+    bool flag=judge(n);
+    if(flag){
+        int len=node.size();
+        ifor(len){
+            int temp=node.front();
+            node.pop();
+            cout<<temp<<' ';
+        }
+    }else{
+        cout<<"ERROR";
+    }
+}
