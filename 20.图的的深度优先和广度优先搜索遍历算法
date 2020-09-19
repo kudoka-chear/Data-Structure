@@ -1,0 +1,87 @@
+//实现图的深度优先和广度优先搜索遍历算法
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)
+#define jfor(n) for(int j=0;j<n;j++)
+#define MAXVEX 20//最大顶点个数 
+#define FINITY 100//最大值 
+
+typedef char VertexType;
+int visit[MAXVEX];
+
+typedef struct{
+	VertexType vexs[MAXVEX];//顶点向量 
+	int arc[MAXVEX][MAXVEX];//邻接矩阵 
+	int numVertexes,numEdges;//图的当前顶点数和弧数 
+}MGraph;
+
+int Creat(MGraph *g){
+	int i,j;
+	cin>>g->numVertexes>>g->numEdges;
+	//输入顶点信息 
+	ifor(g->numVertexes){
+		cin>>g->vexs[i];
+	}
+	cout<<"输入邻接矩阵:";
+	ifor(g->numVertexes){
+		jfor(g->numVertexes){
+			cin>>g->arc[i][j];
+			if(g->arc[i][j]==0){
+				g->arc[i][j]=FINITY;//为0时，表示没有联系 
+			}
+		}
+	}
+	//输出邻接矩阵
+//	ifor(g->numVertexes){
+//		jfor(g->numVertexes){
+//			cout<<g->arc[i][j];
+//		}
+//		cout<<endl;
+//	} 
+}
+int DFS(MGraph g,int i){
+	visit[i]=1;
+	cout<<g.vexs[i]<<' ';
+	jfor(g.numVertexes)
+		if(!visit[j]&&g.arc[i][j]!=FINITY){
+			DFS(g,j);
+		}
+}
+//深度优先遍历 
+int DFSTraverse(MGraph g){
+	ifor(g.numVertexes)
+		visit[i]=0;
+	DFS(g,0);
+}
+//广度优先遍历
+int BFSTtraverse(MGraph g){
+	ifor(100){
+		visit[i]=0;
+	}
+	int head,tail,arr[100];
+	head=0;tail=1;arr[0]=0;visit[0]=1;
+	cout<<0<<' ';
+	while(head<tail){
+		ifor(g.numVertexes){
+			if(g.arc[arr[head]][i]!=FINITY&&!visit[i]){
+				visit[i]=1;
+				arr[tail++]=i;
+				cout<<g.vexs[i]<<' ';
+			}
+		}
+		head++;
+	}
+	return 0;
+}
+int main(){
+	freopen("input.txt","r",stdin);
+	MGraph g;
+	Creat(&g);
+	cout<<"深度优先搜索：";
+	DFSTraverse(g);
+	cout<<endl;
+	cout<<"广度优先搜索：";
+	BFSTtraverse(g);
+}
