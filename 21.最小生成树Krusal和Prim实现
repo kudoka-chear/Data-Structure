@@ -1,0 +1,144 @@
+
+//Krusal
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+#define ifor(n) for(int i=0;i<n;i++)
+#define jfor(n) for(int j=0;j<n;j++)
+#define MAX_VERTEX_NUM 55
+#define MAXVEX 100//最大顶点个数 
+#define FINITY 100//最大值
+
+int f[MAXVEX];
+
+typedef struct Edge{
+	int u,v;
+	int weight;
+}Edge;
+
+bool cmp(Edge a,Edge b){
+	return a.weight<b.weight;
+}
+int findFather(int a){
+	int af=a;
+	while(af!=f[af]){
+		af=f[af];
+	}
+	while(a!=af){
+		int temp=f[a];
+		f[a]=af;
+		a=temp;
+	}
+	return af;
+}
+int main(){
+	ifor(MAXVEX) f[i]=0;
+	int n,k=0,sum=0;
+	cin>>n;
+	Edge e[MAXVEX];
+	ifor(n){
+		jfor(n){
+			int x;
+			cin>>x;
+			if(x){
+				e[k].u=i;
+				e[k].v=j;
+				e[k].weight=x;
+				k++;
+			}
+		}
+	}
+	sort(e,e+k,cmp);
+	ifor(k){
+		int uf=findFather(e[i].u);
+		int vf=findFather(e[i].v);
+		if(uf!=vf){
+			f[vf]=uf;
+			sum+=e[i].weight;
+		}
+	}
+  
+  
+  
+  //Prim
+  //通过Prim和Kruskal算法实现最小生成树； 
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+#define ifor(n) for(int i=0;i<n;i++)
+#define jfor(n) for(int j=0;j<n;j++)
+#define MAX_VERTEX_NUM 55
+#define MAXVEX 100//最大顶点个数 
+#define FINITY 100//最大值
+
+typedef int VertexType;
+int visit[MAXVEX];
+
+typedef struct{
+	VertexType vexs[MAXVEX];//顶点向量 
+	int arc[MAXVEX][MAXVEX];//邻接矩阵 
+	int numVertexes,numEdges;//图的当前顶点数和弧数 
+}MGraph;
+
+
+typedef struct {
+	VertexType data;
+	int lowcost;
+}closedge[MAX_VERTEX_NUM];
+
+int Creat(MGraph *g){
+	cin>>g->numVertexes;
+	ifor(g->numVertexes){
+		jfor(g->numVertexes){
+			cin>>g->arc[i][j];
+			if(i!=j&&g->arc[i][j]==0){
+				g->arc[i][j]=FINITY;//为0时，表示没有联系 
+			}
+		}
+	}
+	//输出邻接矩阵
+//	ifor(g->numVertexes){
+//		jfor(g->numVertexes){
+//			cout<<g->arc[i][j];
+//		}
+//		cout<<endl;
+//	} 
+}
+
+//普里姆算法
+int MiniSpanTree_PRIM(MGraph g){
+	int min,sum=0,k;
+	closedge arr;
+	ifor(g.numVertexes){
+		arr[i].lowcost=g.arc[0][i];
+		arr[i].data=0;
+	}
+	arr[0].lowcost=0;
+	arr[0].data=1;
+	ifor(g.numVertexes-1){
+		min=FINITY;
+		jfor(g.numVertexes){
+			if(arr[j].data==0&&arr[j].lowcost<min){
+				min=arr[j].lowcost;
+				k=j;
+			}
+		}
+		arr[k].data=1;
+		sum+=arr[k].lowcost;
+		jfor(g.numVertexes){
+			if(arr[j].data==0&&arr[j].lowcost>g.arc[k][j])
+				arr[j].lowcost=g.arc[k][j];
+		}
+	}
+	cout<<sum<<endl;
+} 
+
+int main(){
+	//freopen("input.txt","r",stdin);
+	MGraph g;
+	Creat(&g);
+	MiniSpanTree_PRIM(g);
+}
+
+	cout<<sum;
+}
