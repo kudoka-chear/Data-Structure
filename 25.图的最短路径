@@ -1,0 +1,122 @@
+//Dijkstra
+#include<iostream>
+#include<algorithm>
+#include<queue>
+#include<stack>
+using namespace std;
+ 
+const int INF = 0x3fffffff;
+int n,s,m;
+int G[51][51];
+bool vis[51]={false};
+int d[51];
+
+int g[60][60];
+ 
+void Dijkstra(int s)
+{
+	fill(d,d+51,INF);
+	d[s] = 0;
+	for (int i=0;i<n;i++)
+	{
+		int u=-1 , MIN = INF;
+		for (int j=0;j<n;j++)
+		{
+			if (vis[j]==false && d[j]<MIN)
+			{
+				u = j;
+				MIN = d[j];
+			}
+		}
+		if (u == -1) return ;
+		vis[u] = true;
+		for (int v=0;v<n;v++)
+		{
+			if (vis[v]==false &&G[u][v]!=0 && d[u]+G[u][v]<d[v] )
+			d[v] = d[u]+G[u][v];
+		}
+	}
+}
+ 
+int main()
+{
+	int i,j,k;
+	cin>>n>>s;
+	
+	for (i=0;i<n;i++)
+	{
+		for (j=0;j<n;j++)
+		{
+			cin>>G[i][j];
+		}
+	}
+	Dijkstra(s);
+	for (i=0;i<n;i++)
+	{
+		if (i!=s)
+		{
+			if (d[i]==INF )
+			cout<<"-1"<<" ";
+			else
+			cout<<d[i]<<" ";
+		}
+		
+	}
+	cout<<endl;
+	
+	return 0;
+}
+
+
+//FLODY
+#include<bits/stdc++.h>
+#include<stdio.h>
+using namespace std;
+
+#define ifor(n) for(int i=0;i<n;i++)
+  
+const int maxn=60;
+const int INF=0x3fffffff;
+int n,d[maxn][maxn];
+void Floyd()
+{
+    for(int k=0;k<n;++k)
+    {
+        for(int i=0;i<n;++i)
+        {
+            for(int j=0;j<n;++j)
+            {
+                if(d[i][k]!=INF&&d[k][j]!=INF&&d[i][k]+d[k][j]<d[i][j])
+                {
+                    d[i][j]=d[i][k]+d[k][j];
+                }
+            }
+        }
+    }
+}
+int main()
+{
+    while(~scanf("%d",&n))
+    {
+        for(int i=0;i<n;++i)
+            for(int j=0;j<n;++j)
+            {
+                scanf("%d",&d[i][j]);
+                if(d[i][j]==0&&i!=j)
+                    d[i][j]=INF;
+            }
+        Floyd();
+        for(int i=0;i<n;++i)
+        {
+            for(int j=0;j<n;++j)
+            {
+                if(d[i][j]==INF)
+                    printf("-1 ");
+                else
+                    printf("%d ",d[i][j]);
+            }
+            printf("\n");
+        }
+    }
+    return 0;
+}
